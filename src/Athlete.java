@@ -2,6 +2,7 @@ import java.util.ArrayList;
 
 public class Athlete extends User {
     private ArrayList<SymptomSummary> summaries = new ArrayList<SymptomSummary>();
+    private boolean atRisk = false;
 
     public Athlete() {
         super("athlete");
@@ -68,5 +69,38 @@ public class Athlete extends User {
         } else {
             System.out.println("No symptom records available.");
         }
+    }
+
+    public void displayMostRecentOverallRating() {
+        String GREEN = "\u001B[32m";
+        String YELLOW = "\u001B[33m";
+        String RED = "\u001B[31m";
+        String RESET = "\u001B[0m";
+        SymptomSummary latestRecord = this.getLatestRecord();
+        if (latestRecord != null) {
+            String overallRating = latestRecord.getOverallRating();
+            if (overallRating.equals("No difference in symptom scores")) {
+                System.out.println(GREEN + "No. The athlete has " + overallRating.toLowerCase() + "." + RESET);
+            } else if (overallRating.equals("Unsure")) {
+                System.out.println(YELLOW + "Unsure. The athlete's overall rating is " + overallRating.toLowerCase() + "." + RESET);
+            } else if (overallRating.equals("Very different symptom scores")) {
+                System.out.println(RED + "Yes. The athlete has " + overallRating.toLowerCase() + "." + RESET);
+            } else {
+                System.out.println("Not enough symptom records available to determine.");
+            }
+        } else {
+            System.out.println("Not enough symptom records available to determine.");
+        }
+        if (this.isAtRisk()) {
+            System.out.println(RED + "The athlete has been flagged as at risk for concussion." + RESET);
+        }
+    }
+
+    public boolean isAtRisk() {
+        return atRisk;
+    }
+
+    public void setAtRisk(boolean atRisk) {
+        this.atRisk = atRisk;
     }
 }

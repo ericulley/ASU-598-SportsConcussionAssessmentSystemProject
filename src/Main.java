@@ -1,12 +1,9 @@
-import java.util.ArrayList;
 import java.util.InputMismatchException;
-import java.util.List;
 import java.util.Scanner;
 
 public class Main {
 
     private static final Scanner scanner = new Scanner(System.in);
-    private static final List<int[]> gameRecords = new ArrayList<>();
 
     public static void main(String[] args) {
         String currentUserRole = null;
@@ -45,7 +42,7 @@ public class Main {
                             default -> System.out.println("Invalid option. Try again.");
                         }
                     }
-                    case 3 -> currentUserRole = null; // update this
+                    case 3 -> athlete.displayMostRecentOverallRating();
                     case 4 -> currentUserRole = null;
                     default -> System.out.println("Invalid option. Try again.");
                 }
@@ -54,9 +51,10 @@ public class Main {
                 displayMedicalMenu();
                 int medicalChoice = readInt("Select an option: ");
                 switch (medicalChoice) {
-                    // case 1 -> addGameRecord();
-                    // case 2 -> viewGameRecords();
-                    case 3 -> currentUserRole = null;
+                    case 1 -> athlete.displayLatestSymptomSummary();
+                    case 2 -> athlete.displayAllSymptomSummaries();
+                    case 3 -> medicalPractitioner.flagAthleteAtRisk(athlete);
+                    case 4 -> currentUserRole = null;
                     default -> System.out.println("Invalid option. Try again.");
                 }
             }
@@ -98,7 +96,8 @@ public class Main {
         System.out.println("===== MEDICAL MENU =====");
         System.out.println("1. View latest athlete symptom summary");
         System.out.println("2. View all athlete symptom summaries");
-        System.out.println("3. Back to role selection");
+        System.out.println("3. Flag athlete as at risk for concussion");
+        System.out.println("4. Back to role selection");
     }
 
     private static void recordPostGameSymptoms(Athlete athlete) {
@@ -118,35 +117,6 @@ public class Main {
         System.out.println("Symptoms recorded successfully.");
         System.out.println("Your current symptom scores: " + athlete.getLatestRecord().toString());
     }
-
-    // Application logic methods
-    // private static void addGameRecord() {
-    //     int size = readInt("How many symptoms to record? ");
-    //     int[] record = new int[size];
-    //     for (int i = 0; i < size; i++) {
-    //         record[i] = readInt("Enter severity for symptom " + (i + 1) + " (0-6): ");
-    //     }
-    //     gameRecords.add(record);
-    //     if (gameRecords.size() > 5) {
-    //         gameRecords.remove(0);
-    //     }
-    //     System.out.println("Record stored (game #" + gameRecords.size() + ").");
-    // }
-
-    // private static void viewGameRecords() {
-    //     if (gameRecords.isEmpty()) {
-    //         System.out.println("No records yet.");
-    //         return;
-    //     }
-    //     for (int i = 0; i < gameRecords.size(); i++) {
-    //         int[] record = gameRecords.get(i);
-    //         System.out.print("Game " + (i + 1) + ": ");
-    //         for (int severity : record) {
-    //             System.out.print(severity + " ");
-    //         }
-    //         System.out.println();
-    //     }
-    // }
 
     private static int readInt(String prompt) {
         while (true) {
