@@ -13,7 +13,7 @@ public class User {
         this.role = role;
     }
 
-    public void viewAthleteRecords() {
+    public void getAthleteRecords() {
         // Implementation for viewing athlete records
     }
 
