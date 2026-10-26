@@ -33,8 +33,20 @@ public class Main {
                 int athleteChoice = readInt("Select an option: ");
                 switch (athleteChoice) {
                     case 1 -> recordPostGameSymptoms(athlete);
-                    case 2 -> viewGameRecords();
-                    case 3 -> currentUserRole = null;
+                    case 2 -> {
+                        displaySymptomSummaryMenu(athlete);
+                        int symptomSummaryChoice = readInt("Select an option: ");
+                        switch (symptomSummaryChoice) {
+                            case 1 -> athlete.displayLatestSymptomSummary();
+                            case 2 -> athlete.displayAllSymptomSummaries();
+                            case 3 -> {
+                                // Do nothing, will return to previous menu
+                            }
+                            default -> System.out.println("Invalid option. Try again.");
+                        }
+                    }
+                    case 3 -> currentUserRole = null; // update this
+                    case 4 -> currentUserRole = null;
                     default -> System.out.println("Invalid option. Try again.");
                 }
             }
@@ -42,8 +54,8 @@ public class Main {
                 displayMedicalMenu();
                 int medicalChoice = readInt("Select an option: ");
                 switch (medicalChoice) {
-                    case 1 -> addGameRecord();
-                    case 2 -> viewGameRecords();
+                    // case 1 -> addGameRecord();
+                    // case 2 -> viewGameRecords();
                     case 3 -> currentUserRole = null;
                     default -> System.out.println("Invalid option. Try again.");
                 }
@@ -57,7 +69,6 @@ public class Main {
     private static void displayUserRoleMenu() {
         System.out.println();
         System.out.println("========== USER ROLE MENU ===========");
-        System.out.println("====== Please select your role ======");
         System.out.println("1. Athlete");
         System.out.println("2. Medical Practitioner");
         System.out.println("3. Exit");
@@ -68,63 +79,74 @@ public class Main {
         System.out.println("===== ATHLETE MENU =====");
         System.out.println("1. Add game symptoms");
         System.out.println("2. View game records");
-        System.out.println("3. Back to role selection");
+        System.out.println("3. Am I at risk?");
+        System.out.println("4. Back to role selection");
+    }
+
+    private static void displaySymptomSummaryMenu(Athlete athlete) {
+        System.out.println();
+        System.out.println("===== SYMPTOM SUMMARY MENU =====");
+        int recordCount = athlete.getRecordCount();
+        System.out.println("You have " + recordCount + " symptom records.");
+        System.out.println("1. View latest symptom summary");
+        System.out.println("2. View all symptom records");
+        System.out.println("3. Back to previous menu");
     }
 
     private static void displayMedicalMenu() {
         System.out.println();
         System.out.println("===== MEDICAL MENU =====");
-        System.out.println("1. View game records");
-        System.out.println("2. View game records");
+        System.out.println("1. View latest athlete symptom summary");
+        System.out.println("2. View all athlete symptom summaries");
         System.out.println("3. Back to role selection");
     }
 
     private static void recordPostGameSymptoms(Athlete athlete) {
-        PostGameRecord record = new PostGameRecord();
-        SymptomSet symptomSet = record.getSymptomSet();
+        SymptomSet symptomSet = new SymptomSet();
         for (String symptom : SymptomSet.symptomKeys) {
             int score = -1;
-            while (score < 0 && score > 6) {
+            while (score < 0 || score > 6) {
                 score = readInt("Please enter your " + SymptomSet.symptomPromptMap.get(symptom) + " score (none (0), mild (1-2), moderate (3-4), & severe (5-6)): ");
                 if (score < 0 || score > 6) {
                     System.out.println("Invalid score. Please enter a value between 0 and 6.");
                 }
             }
             symptomSet.setSymptomScore(symptom, score);
+            // if (score > 0) record.incrementSymptomCount();
         }
-        athlete.addRecord(record);
+        athlete.addSummary(new SymptomSummary(symptomSet));
         System.out.println("Symptoms recorded successfully.");
-        System.out.println("Your current symptom scores: " + record.toString());
+        System.out.println("Your current symptom scores: " + athlete.getLatestRecord().toString());
     }
 
     // Application logic methods
-    private static void addGameRecord() {
-        int size = readInt("How many symptoms to record? ");
-        int[] record = new int[size];
-        for (int i = 0; i < size; i++) {
-            record[i] = readInt("Enter severity for symptom " + (i + 1) + " (0-6): ");
-        }
-        gameRecords.add(record);
-        if (gameRecords.size() > 5) {
-            gameRecords.remove(0);
-        }
-        System.out.println("Record stored (game #" + gameRecords.size() + ").");
-    }
+    // private static void addGameRecord() {
+    //     int size = readInt("How many symptoms to record? ");
+    //     int[] record = new int[size];
+    //     for (int i = 0; i < size; i++) {
+    //         record[i] = readInt("Enter severity for symptom " + (i + 1) + " (0-6): ");
+    //     }
+    //     gameRecords.add(record);
+    //     if (gameRecords.size() > 5) {
+    //         gameRecords.remove(0);
+    //     }
+    //     System.out.println("Record stored (game #" + gameRecords.size() + ").");
+    // }
 
-    private static void viewGameRecords() {
-        if (gameRecords.isEmpty()) {
-            System.out.println("No records yet.");
-            return;
-        }
-        for (int i = 0; i < gameRecords.size(); i++) {
-            int[] record = gameRecords.get(i);
-            System.out.print("Game " + (i + 1) + ": ");
-            for (int severity : record) {
-                System.out.print(severity + " ");
-            }
-            System.out.println();
-        }
-    }
+    // private static void viewGameRecords() {
+    //     if (gameRecords.isEmpty()) {
+    //         System.out.println("No records yet.");
+    //         return;
+    //     }
+    //     for (int i = 0; i < gameRecords.size(); i++) {
+    //         int[] record = gameRecords.get(i);
+    //         System.out.print("Game " + (i + 1) + ": ");
+    //         for (int severity : record) {
+    //             System.out.print(severity + " ");
+    //         }
+    //         System.out.println();
+    //     }
+    // }
 
     private static int readInt(String prompt) {
         while (true) {

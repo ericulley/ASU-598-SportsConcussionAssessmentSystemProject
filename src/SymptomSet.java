@@ -55,18 +55,16 @@ public class SymptomSet {
         Map.entry("nervousOrAnxious", "Nervous or Anxious")
     ));
 
+    // Constructor
     public SymptomSet() {
         // Initialize symptom scores with null values
         this.symptomScores = new HashMap<>();
-        for (String symptom : this.symptomPromptMap.keySet()) {
+        for (String symptom : SymptomSet.symptomPromptMap.keySet()) {
             symptomScores.put(symptom, null);
         }
     }
 
-    public ArrayList<String> getSymptomKeys() {
-        return new ArrayList<String>(this.symptomKeys);
-    }
-
+    // Methods
     public HashMap<String, Integer> getSymptomScores() {
         return this.symptomScores;
     }
@@ -89,14 +87,14 @@ public class SymptomSet {
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("SymptomSet{");
+        sb.append("SymptomSet{ \n");
         for (Map.Entry<String, Integer> entry : symptomScores.entrySet()) {
-            sb.append(entry.getKey()).append("=").append(entry.getValue()).append(", ");
+            sb.append("   " + entry.getKey()).append("=").append(entry.getValue()).append(", \n");
         }
         if (!symptomScores.isEmpty()) {
             sb.setLength(sb.length() - 2); // Remove trailing comma and space
         }
-        sb.append('}');
+        sb.append('\n').append("  }");
         return sb.toString();
     }
 }
